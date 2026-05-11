@@ -1,31 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private repo: UsersRepository) {}
 
   findByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+    return this.repo.findByEmail(email);
   }
 
   findByGoogleSub(googleSub: string) {
-    return this.prisma.user.findUnique({ where: { googleSub } });
+    return this.repo.findByGoogleSub(googleSub);
   }
 
   findById(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+    return this.repo.findById(id);
   }
 
   create(data: Prisma.UserCreateInput) {
-    return this.prisma.user.create({ data });
+    return this.repo.create(data);
   }
 
   linkGoogle(id: string, googleSub: string, avatarUrl?: string) {
-    return this.prisma.user.update({
-      where: { id },
-      data: { googleSub, avatarUrl: avatarUrl ?? undefined },
-    });
+    return this.repo.linkGoogle(id, googleSub, avatarUrl);
   }
 }
